@@ -1,7 +1,4 @@
-# General VM
-A custom instruction set that is run in python
-
-## Instruction Set
+# Instruction Set
 |Instructions |Paramaters |Meaning                                            |
 |-------------|-----------|---------------------------------------------------|
 |set          |a b        |gets data from b and stores it in a                |
@@ -15,14 +12,14 @@ A custom instruction set that is run in python
 |loadMem      | a A B C ..| stores an array of data A B C ... into memory starting at address a |
 |skip         | a         | skips next line if a != 0                         |
 
-## Cmp Reference Table
+# Cmp Reference Table
 | b  | action          |
 |----|-----------------|
 | >  | if a > c run f  |
 | =  | if a = c run f  |
 | <= | if a <= c run f |
 
-## Types
+# Types
 |type      | notation | meaning         | example |
 |----------|----------|-----------------|---------|
 |Immediate | \d+      | A simple number | 6       |
@@ -30,11 +27,11 @@ A custom instruction set that is run in python
 |Reference | *\d+:n?      | reference a address in memory which holds the address of the target cell| *72:main      | 
 |Register  | [rR]\d       | a simple register for temporary holding | R1 |
 
-## Memory segments
+# Memory segments
 Memory segments are different sections of memory each with their own address space, using an address as such `72:` with no segment specified implies that the machine should go to the current default memory secion. 
 on startup this is called "main" but can be set to any memory segment via the `setMemSeg` command
 
-## Registers
+# Registers
 These act as tempory places to hold data but effectivly are just like memory. 
 you can use r0 to r7.
 by default all values in registers are immediate values but if you would like a register to be interperted as a address simply do `R0:`
@@ -42,7 +39,7 @@ you can further do `*R0:` to use the value in the address pointed to by the regi
 
 this does not support multiple memorgy segments though, only current. 
 
-## Functions
+# Functions
 to set up a small bit of code to run on a function call do
 ```
 define [name]
@@ -71,12 +68,12 @@ Functions are designed to be for small bits of code and to allow for conditional
 In future there may be a full stack set up that allows for recurrsion and functions to have no limitations on them but at the moment the code is run seperately in it's own code space meaning jumping is impossible. 
 Furthermore the current function being run is stored in a single variable rather then on a stack so recurrsion is impossible as well. 
 
-## Cycles
+# Cycles
 The machine keeps track of its' own cycles, at the creation of the machiens you specify what is the max cycle count on the machine. 
 
 This is to prevent infinite loops, once the cycle count is hit the program will stop. setting this to 1000 usually allows for a ample amount of code to be run and a infinite loop to be caught. 
 
-## Example code
+# Example code
 Code to add 5 and 6 together and store it at memory address 0 in the main memory segment
 ```
 set r0 5
@@ -108,5 +105,3 @@ A roundabout way of getting the data in cell 5 of memory segment main, into regi
 set 0: 5
 set r0 *0:
 ```
-
-## Current Bugs
