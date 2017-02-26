@@ -1,6 +1,41 @@
 # General VM
 A custom instruction set that is run in python
 
+## Using it
+Simply make a instance of the vm
+load up some code
+and run it
+```
+vm = VM(500, 1000) # 500 cells of memory and a max of 1000 cycles
+vm.loadCode("set 0: 5")
+vm.run()
+```
+To see the machine state just do
+```
+vm.showState()
+```
+To get the state in dict form do 
+```
+state = vm.getState()
+```
+The state dict contains the following information
+```
+cycles    : int
+pc        : int
+registers : dict
+    R0 : int
+    R1 : int
+    R2 : int
+    R3 : int
+    R4 : int
+    R5 : int
+    R6 : int
+    R7 : int
+memory    : dict
+    main : list
+    ... other defined memory
+
+```
 ## Instruction Set
 |Instructions |Paramaters |Meaning                                            |
 |-------------|-----------|---------------------------------------------------|

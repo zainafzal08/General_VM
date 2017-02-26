@@ -1,6 +1,7 @@
 import sys
 import re
 import copy
+import time
 
 def match(text, regex):
 	m = re.search("("+regex+")", text)
@@ -237,7 +238,46 @@ class VM():
 	def memLoad(self, params):
 		a = self.getVal(params[0])
 		self.memory.write(a, params[1:])
-
+	def getState(self):
+		d = {}
+		d['cycles'] = self.cycles
+		d['pc'] = self.pc
+		d['registers'] = self.registers
+		d['memory'] = {}
+		for seg in self.memorySegments:
+			d['memory'][seg] = self.memorySegments[seg].data
+		return d
+	def showState(self):
+		state = self.getState()
+		print("-------- Virtual Machine State @ " + time.strftime("%d/%m/%Y %H:%M:%S")+" --------")
+		print("Registers")
+		for r in sorted(state['registers'].keys()):
+			sys.stdout.write(r+":"+str(state['registers'][r])+"    ")
+		print("")
+		print("")
+		print("PC"+" "*52+"CYCLES")
+		space = 60 - len(str(state['pc'])) - len(str(state['cycles']))
+		print(str(state['pc']) + " "*space + str(state['cycles']))
+		print("")
+		for seg in sorted(state['memory'].keys()):
+			print(seg)
+			print("")
+			terminal = []
+			temp = []
+			rowSize = 11
+			for i,d in enumerate(state['memory'][seg]):
+				if i%rowSize == 0:
+					if len(temp) != 0:
+						terminal.append(temp)
+					temp = []
+					temp.append(i)
+				temp.append(d)
+			while len(temp) <= rowSize:
+				temp.append(-1)
+			terminal.append(temp)
+			for line in terminal:
+				print("{:3}  {:5}{:5}{:5}{:5}{:5}{:5}{:5}{:5}{:5}{:5}{:5}".format(line[0],line[1],line[2],line[3],line[4],line[5],line[6],line[7],line[8],line[9],line[10],line[11]))
+			print("")
 	# Get the value of a paramter
 	def getVal(self, param):
 		# reference
@@ -314,3 +354,8 @@ class VM():
 		line = re.sub(r'\s*$',r'',line)
 		message = msg + " ("+line+")"
 		raise ValueError(message)
+if __name__ == "__main__":
+	vm = VM(50, 1000) # 500 cells of memory and a max of 1000 cycles
+	vm.loadCode("set 0: 5")
+	vm.run()
+	vm.showState()
